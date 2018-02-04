@@ -1,6 +1,6 @@
 import argparse
+import random
 from datetime import date
-
 
 def exercise1():
     name = input('Please enter your name: ')
@@ -29,9 +29,37 @@ def exercise3():
     print([x for x in [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89] if x < limit])
 
 
+def exercise4():
+    number = int(input('Please provide a number to calculate divsors for: '))
+    divisors = []
+    for testDivisor in range(1, number+1):
+        if number % testDivisor == 0:
+            divisors.append(testDivisor)
+
+    print(divisors)
+
+
+def exercise5():
+    a = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89]
+    b = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+    print({x for x in a if x in b})
+
+
+def exercise5_1():
+    a = [random.randint(1, 100) for x in range(random.randint(1, 50))]
+    b = [random.randint(1, 100) for x in range(random.randint(1, 50))]
+    print('a:', a)
+    print('b:', b)
+    print('intersection:', {x for x in a if x in b})
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Execute Learning Python exercises')
     parser.add_argument('exercise', action='store', type=int)
+    parser.add_argument('-extra', action='store', type=int)
     args = parser.parse_args()
 
-    eval('exercise'+str(args.exercise)+'()')
+    if args.extra is not None:
+        eval('exercise' + str(args.exercise) + '_' + str(args.extra) + '()')
+    else:
+        eval('exercise' + str(args.exercise) + '()')
