@@ -68,6 +68,11 @@ def exercise6():
         print('The word', input_string, 'is NOT a palindrome')
 
 
+def exercise7():
+    a = [1, 4, 9, 16, 25, 36, 49, 64, 81, 100]
+    print([x for x in a if x % 2 == 0])
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Execute Learning Python exercises')
     parser.add_argument('exercise', action='store', type=int)
