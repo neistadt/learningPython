@@ -2,6 +2,7 @@ import argparse
 import random
 from datetime import date
 
+
 def exercise1():
     name = input('Please enter your name: ')
     age = int(input('Please enter your age: '))
@@ -32,7 +33,7 @@ def exercise3():
 def exercise4():
     number = int(input('Please provide a number to calculate divsors for: '))
     divisors = []
-    for testDivisor in range(1, number+1):
+    for testDivisor in range(1, number + 1):
         if number % testDivisor == 0:
             divisors.append(testDivisor)
 
@@ -51,6 +52,20 @@ def exercise5_1():
     print('a:', a)
     print('b:', b)
     print('intersection:', {x for x in a if x in b})
+
+
+def exercise6():
+    input_string = input('Input a string to test whether its a palindrome: ')
+    is_palindrome = True
+    for index, character in enumerate(input_string[:int(len(input_string) / 2)]):
+        if character != input_string[-(index+1)]:
+            is_palindrome = False
+            break
+
+    if is_palindrome:
+        print('The word', input_string, 'is a palindrome')
+    else:
+        print('The word', input_string, 'is NOT a palindrome')
 
 
 if __name__ == '__main__':
