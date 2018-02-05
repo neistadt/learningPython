@@ -73,6 +73,50 @@ def exercise7():
     print([x for x in a if x % 2 == 0])
 
 
+def exercise8():
+    rules = {
+        'rock': 'scissors',
+        'paper': 'rock',
+        'scissors': 'paper'
+    }
+
+    print('Let\'s play rock paper scissors!')
+    keep_playing = True
+    while keep_playing:
+        choice = ['', '']
+        for i in [0, 1]:
+            choice[i] = repeat_until_valid('Player {}: Please enter rock, paper, '
+                                           'or scissors: '.format(i+1), rules.keys()).lower()
+
+        # Evaluate who won
+        if rules.get(choice[0]) == choice[1]:
+            print('Player 1\'s {} beat Player 2\'s {}!'.format(choice[0], choice[1]))
+        elif rules.get(choice[1]) == choice[0]:
+            print('Player 2\'s {} beat Player 1\'s {}!'.format(choice[1], choice[0]))
+        else:
+            print('It\'s a tie!')
+
+        play_again = repeat_until_valid('Do you want to play again (y/n)? ', ['y', 'n'])
+        if play_again.lower() == 'y':
+            keep_playing = True
+        else:
+            keep_playing = False
+
+
+def repeat_until_valid(input_prompt, valid_values):
+    choice = ''
+    invalid_choice = True
+    while invalid_choice:
+        choice = input(input_prompt)
+        if choice.lower() not in valid_values:
+            print('"{}" is not a valid choice. Please choose one of {}'.format(choice, list(valid_values)))
+            invalid_choice = True
+        else:
+            invalid_choice = False
+
+    return choice
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Execute Learning Python exercises')
     parser.add_argument('exercise', action='store', type=int)
