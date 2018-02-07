@@ -1,5 +1,6 @@
 import argparse
 import random
+import sys
 from datetime import date
 
 
@@ -86,7 +87,7 @@ def exercise8():
         choice = ['', '']
         for i in [0, 1]:
             choice[i] = repeat_until_valid('Player {}: Please enter rock, paper, '
-                                           'or scissors: '.format(i+1), rules.keys()).lower()
+                                           'or scissors: '.format(i+1), *rules.keys())
 
         # Evaluate who won
         if rules.get(choice[0]) == choice[1]:
@@ -96,25 +97,43 @@ def exercise8():
         else:
             print('It\'s a tie!')
 
-        play_again = repeat_until_valid('Do you want to play again (y/n)? ', ['y', 'n'])
+        play_again = repeat_until_valid('Do you want to play again (y/n)? ', 'y', 'n')
         if play_again.lower() == 'y':
             keep_playing = True
         else:
             keep_playing = False
 
 
-def repeat_until_valid(input_prompt, valid_values):
+def repeat_until_valid(input_prompt, *valid_values):
     choice = ''
     invalid_choice = True
     while invalid_choice:
-        choice = input(input_prompt)
-        if choice.lower() not in valid_values:
+        choice = input(input_prompt).lower()
+        if choice not in valid_values:
             print('"{}" is not a valid choice. Please choose one of {}'.format(choice, list(valid_values)))
             invalid_choice = True
         else:
             invalid_choice = False
 
     return choice
+
+
+def exercise9():
+    winning_number = str(random.randint(1, 9))
+    guesses = 0
+    while True:
+        guess_string = repeat_until_valid('Guess the value from 1 to 9 (type "exit" to quit): ',
+                                          *(str(x) for x in range(1, 10)), 'exit')
+        if guess_string == 'exit':
+            print('Quiting the game. The answer was {} and you made {} guesses'.format(winning_number, guesses))
+            sys.exit()
+        elif guess_string == winning_number:
+            guesses = guesses + 1
+            print('You won! It took you {} guesses'.format(guesses))
+            sys.exit()
+        else:
+            guesses = guesses + 1
+            print('Wrong! Try again!')
 
 
 if __name__ == '__main__':
