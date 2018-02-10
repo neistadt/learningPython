@@ -32,13 +32,12 @@ def exercise3():
 
 
 def exercise4():
-    number = int(input('Please provide a number to calculate divsors for: '))
-    divisors = []
-    for testDivisor in range(1, number + 1):
-        if number % testDivisor == 0:
-            divisors.append(testDivisor)
+    number = int(input('Please provide a number to calculate divisors for: '))
+    print(divisors(number))
 
-    print(divisors)
+
+def divisors(number):
+    return [divisor for divisor in range(1, number + 1) if number % divisor == 0]
 
 
 def exercise5():
@@ -137,6 +136,12 @@ def exercise9():
 
 
 # skipping exercise10 because it is identical to 5
+def exercise11():
+    number = int(input('Please provide a number to test whether its prime: '))
+    if divisors(number) == [1, number]:
+        print(number, 'is a prime number!')
+    else:
+        print(number, 'is NOT a prime number!')
 
 
 if __name__ == '__main__':
