@@ -197,6 +197,12 @@ def remove_duplicates_using_sets(list_to_examine):
     return list(set(list_to_examine))
 
 
+def exercise15():
+    sentence = input('Provide a long sentence:\n')
+    print('Here\'s the sentence backwards:')
+    print(" ".join(sentence.split()[::-1]))
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Execute Learning Python exercises')
     parser.add_argument('exercise', action='store', type=int)
