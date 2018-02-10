@@ -136,6 +136,9 @@ def exercise9():
             print('Wrong! Try again!')
 
 
+# skipping exercise10 because it is identical to 5
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Execute Learning Python exercises')
     parser.add_argument('exercise', action='store', type=int)
