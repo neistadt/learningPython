@@ -1,6 +1,7 @@
 import argparse
 import random
 import sys
+import requests
 from datetime import date
 
 
@@ -103,18 +104,30 @@ def exercise8():
             keep_playing = False
 
 
-def repeat_until_valid(input_prompt, *valid_values):
-    choice = ''
+def repeat_until_valid(input_prompt, *valid_values, case_insensitive=True, output_change_case=True):
+    choice, raw_choice = '', ''
+    compare_values = valid_values
     invalid_choice = True
+    if case_insensitive:
+        compare_values = {str(v).lower() for v in valid_values}
+
     while invalid_choice:
-        choice = input(input_prompt).lower()
-        if choice not in valid_values:
-            print('"{}" is not a valid choice. Please choose one of {}'.format(choice, list(valid_values)))
+        raw_choice = input(input_prompt)
+        if case_insensitive:
+            choice = raw_choice.lower()
+        else:
+            choice = raw_choice
+
+        if choice not in compare_values:
+            print('"{}" is not a valid choice. Please choose one of {}'.format(raw_choice, list(valid_values)))
             invalid_choice = True
         else:
             invalid_choice = False
 
-    return choice
+    if output_change_case:
+        return raw_choice.lower()
+    else:
+        return raw_choice
 
 
 def exercise9():
@@ -122,7 +135,7 @@ def exercise9():
     guesses = 0
     while True:
         guess_string = repeat_until_valid('Guess the value from 1 to 9 (type "exit" to quit): ',
-                                          *(str(x) for x in range(1, 10)), 'exit')
+                                          *range(1, 10), 'exit')
         if guess_string == 'exit':
             print('Quiting the game. The answer was {} and you made {} guesses'.format(winning_number, guesses))
             sys.exit()
@@ -201,6 +214,67 @@ def exercise15():
     sentence = input('Provide a long sentence:\n')
     print('Here\'s the sentence backwards:')
     print(" ".join(sentence.split()[::-1]))
+
+
+def exercise16():
+    strength = repeat_until_valid('Do you want a weak or strong password? ', 'weak', 'strong', output_change_case=True)
+    password = ''
+
+    if strength == 'weak':
+        print('You want a weak password. Here you go:')
+        print('Generating using 2 random words from WordNik...')
+        words = fetch_words(2)
+        password = words[0] + words[1]
+    else:
+        print('You want a strong password. Here you go:')
+        print('Generating using a series of random characters...')
+        random_configs = [{
+                'pop': 'abcdefghigklmnopqrstuvwxyz',
+                'min': 3,
+                'max': 6
+            }, {
+                'pop': 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+                'min': 3,
+                'max': 6
+            }, {
+                'pop': '!@#$%^&*()_+=-`~:<>',
+                'min': 3,
+                'max': 6
+            }, {
+                'pop': '1234567890',
+                'min': 3,
+                'max': 6
+            }
+        ]
+        password = fetch_random_characters(random_configs)
+
+    print('PASSWORD =', password)
+
+
+def fetch_random_characters(random_configs):
+    candidates = []
+    for config in random_configs:
+        pop = config['pop']
+        min_rand = config['min']
+        max_rand = config['max']
+        random_num = random.randint(min_rand, max_rand)
+        for i in range(random_num):
+            candidates.append(random.choice(pop))
+
+    random.shuffle(candidates)
+    return ''.join(candidates)
+
+
+def fetch_words(number_of_words):
+    parameters = {
+        'minLength': 6,
+        'limit': number_of_words,
+        'api_key': 'a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5'
+    }
+    r = requests.get('http://api.wordnik.com/v4/words.json/randomWords', parameters)
+    r.raise_for_status()
+    words = r.json()
+    return [w['word'] for w in words]
 
 
 if __name__ == '__main__':
