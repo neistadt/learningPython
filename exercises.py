@@ -2,6 +2,7 @@ import argparse
 import random
 import sys
 import requests
+import string
 from datetime import date
 from bs4 import BeautifulSoup
 
@@ -229,23 +230,11 @@ def exercise16():
     else:
         print('You want a strong password. Here you go:')
         print('Generating using a series of random characters...')
-        random_configs = [{
-                'pop': 'abcdefghigklmnopqrstuvwxyz',
-                'min': 3,
-                'max': 6
-            }, {
-                'pop': 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-                'min': 3,
-                'max': 6
-            }, {
-                'pop': '!@#$%^&*()_+=-`~:<>',
-                'min': 3,
-                'max': 6
-            }, {
-                'pop': '1234567890',
-                'min': 3,
-                'max': 6
-            }
+        random_configs = [
+            {'pop': string.ascii_lowercase, 'min': 3, 'max': 6},
+            {'pop': string.ascii_uppercase, 'min': 3, 'max': 6},
+            {'pop': string.punctuation, 'min': 3, 'max': 6 },
+            {'pop': string.digits, 'min': 3, 'max': 6}
         ]
         password = fetch_random_characters(random_configs)
 
@@ -286,6 +275,40 @@ def exercise17():
     soup = BeautifulSoup(r_html, 'html.parser')
     for story_heading in soup.find_all(attrs={'class': 'story-heading'}):
         print(story_heading.text.replace("\n", " ").strip())
+
+
+def exercise18():
+    answer = '{0:04d}'.format(random.randint(0,9999))
+    # print('DEBUG:', answer)
+    num_guesses = 0
+    game_over = False;
+    while not game_over:
+        guess = input('Enter your guess:\n')
+        num_guesses += 1
+        if len(guess) != len(answer):
+            print('Guess must be {} digits long'.format(len(answer)))
+        elif guess == answer:
+            print('Congrats! You guessed it in {} guesses!'.format(num_guesses))
+            game_over = True
+        else:
+            letters = list(answer)
+            cows = 0
+            bulls = 0
+            for place, letter in enumerate(guess):
+                if answer[place] == letter:
+                    cows += 1
+                    letters.remove(letter)
+                elif letter in letters:
+                    bulls += 1
+                    letters.remove(letter)
+
+            cow_msg = 'cows'
+            bull_msg = 'bulls'
+            if cows == 1:
+                cow_msg = 'cow'
+            if bulls == 1:
+                bull_msg = 'bull'
+            print ('{} {}, {} {}'.format(cows, cow_msg, bulls, bull_msg))
 
 
 if __name__ == '__main__':
