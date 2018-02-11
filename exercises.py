@@ -3,6 +3,7 @@ import random
 import sys
 import requests
 from datetime import date
+from bs4 import BeautifulSoup
 
 
 def exercise1():
@@ -275,6 +276,16 @@ def fetch_words(number_of_words):
     r.raise_for_status()
     words = r.json()
     return [w['word'] for w in words]
+
+
+def exercise17():
+    print('All the New York Time articles as of now: ')
+    r = requests.get('http://www.nyt.com')
+    r.raise_for_status()
+    r_html = r.text
+    soup = BeautifulSoup(r_html, 'html.parser')
+    for story_heading in soup.find_all(attrs={'class': 'story-heading'}):
+        print(story_heading.text.replace("\n", " ").strip())
 
 
 if __name__ == '__main__':
